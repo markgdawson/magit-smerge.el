@@ -41,14 +41,16 @@
 
 File modifications will be saved if file is unmodified, otherwise the user will be promopted."
   (save-window-excursion
-    (magit-diff-visit-file (magit-file-at-point t t))
-    (let ((modified (buffer-modified-p (current-buffer))))
-      (funcall fn)
-
-      (if (or (not modified)
-              (yes-or-no-p "Buffer was already modified. Save it?"))
-          (save-buffer)
-        (message "Buffer not saved due to existing modifications.")))
+    (let ((file (magit-file-at-point t t))
+          (line (magit-diff-hunk-line (magit-diff-visit--hunk) nil)))
+      (with-current-buffer (find-file-noselect file)
+        (let ((modified (buffer-modified-p (current-buffer))))
+          (goto-line line)
+          (funcall fn)
+          (if (or (not modified)
+                  (yes-or-no-p "Buffer was already modified. Save it?"))
+              (save-buffer)
+            (message "Buffer not saved due to existing modifications.")))))
     (magit-refresh)))
 
 ;;;###autoload
