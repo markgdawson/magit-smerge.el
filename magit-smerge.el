@@ -35,6 +35,7 @@
 
 (require 'magit)
 
+;;;###autoload
 (defun magit-smerge--funcall-at-buffer-point (fn)
   "Call function FN from buffer location at point.
 
@@ -50,6 +51,7 @@ File modifications will be saved if file is unmodified, otherwise the user will 
         (message "Buffer not saved due to existing modifications.")))
     (magit-refresh)))
 
+;;;###autoload
 (defun magit-smerge-keep-upper ()
   "Call `smerge-keep-upper` from hunk at point in magit diff buffer.
 
@@ -57,6 +59,7 @@ File modifications will be saved if file is unmodified, otherwise the user will 
   (interactive)
   (magit-smerge--funcall-at-buffer-point #'smerge-keep-upper))
 
+;;;###autoload
 (defun magit-smerge-keep-lower ()
   "Call `smerge-keep-lower` from hunk at point in magit diff buffer.
 
@@ -64,6 +67,7 @@ File modifications will be saved if file is unmodified, otherwise the user will 
   (interactive)
   (magit-smerge--funcall-at-buffer-point #'smerge-keep-lower))
 
+;;;###autoload
 (defun magit-smerge-setup ()
   "Setup magit-smerge keybindings."
   (interactive)
