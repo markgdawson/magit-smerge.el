@@ -64,8 +64,11 @@ File modifications will be saved if file is unmodified, otherwise the user will 
   (interactive)
   (magit-smerge--funcall-at-buffer-point #'smerge-keep-lower))
 
-(define-key magit-hunk-section-map (kbd "C-c ^ l") #'magit-smerge-keep-lower)
-(define-key magit-hunk-section-map (kbd "C-c ^ u") #'magit-smerge-keep-upper)
+(defun magit-smerge-setup ()
+  "Setup magit-smerge keybindings."
+  (interactive)
+  (define-key magit-hunk-section-map (kbd "C-c ^ l") #'magit-smerge-keep-lower)
+  (define-key magit-hunk-section-map (kbd "C-c ^ u") #'magit-smerge-keep-upper))
 
 (provide 'magit-smerge)
 ;;; magit-smerge.el ends here
