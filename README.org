@@ -1,0 +1,7 @@
+* About
+This package enables the smerge keybindings in the magit diff buffer.
+
+Currently ~magit-smerge-keep-lower~ (=C-c ^ l=) and ~magit-smerge-keep-upper~ (=C-c ^ u=) are implemented. Note that keybindings are only active when the point is in a hunk.
+
+If the buffer contains no changes the changes are saved to file, otherwise
+the user is prompted to save the buffer.
