@@ -69,8 +69,7 @@ File modifications will be saved if file is unmodified, otherwise the user will 
                 (progn
                   (save-buffer)
                   (message "Buffer %s saved." buffer-name))
-              (message "Buffer %s not saved due to existing modifications." buffer-name))
-            (magit-refresh)))))))
+              (message "Buffer %s not saved due to existing modifications." buffer-name))))))))
 
 ;;;###autoload
 (defun magit-smerge-keep-upper ()
@@ -78,7 +77,8 @@ File modifications will be saved if file is unmodified, otherwise the user will 
 
 File modifications will be saved if file is unmodified, otherwise the user will be promopted."
   (interactive)
-  (magit-smerge--funcall-at-buffer-point #'smerge-keep-upper))
+  (magit-smerge--funcall-at-buffer-point #'smerge-keep-upper)
+  (magit-refresh))
 
 ;;;###autoload
 (defun magit-smerge-keep-lower ()
@@ -86,7 +86,8 @@ File modifications will be saved if file is unmodified, otherwise the user will 
 
 File modifications will be saved if file is unmodified, otherwise the user will be promopted."
   (interactive)
-  (magit-smerge--funcall-at-buffer-point #'smerge-keep-lower))
+  (magit-smerge--funcall-at-buffer-point #'smerge-keep-lower)
+  (magit-refresh))
 
 ;;;###autoload
 (defun magit-smerge-setup ()
