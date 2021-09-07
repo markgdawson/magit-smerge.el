@@ -43,13 +43,17 @@ File modifications will be saved if file is unmodified, otherwise the user will 
     (let ((file (magit-file-at-point t t))
           (line (magit-diff-hunk-line (magit-diff-visit--hunk) nil)))
       (with-current-buffer (find-file-noselect file)
-        (let ((modified (buffer-modified-p (current-buffer))))
+        (let ((modified (buffer-modified-p (current-buffer)))
+              (buff-name (buffer-name (current-buffer))))
           (goto-line line)
           (funcall fn)
           (if (or (not modified)
-                  (yes-or-no-p "Buffer was already modified. Save it?"))
-              (save-buffer)
-            (message "Buffer not saved due to existing modifications.")))))
+                  (yes-or-no-p (format "Buffer %s was already modified. Save it?"
+                                       buffer-name)))
+              (progn
+                (save-buffer)
+                (message "Buffer %s saved." buffer-name))
+            (message "Buffer %s not saved due to existing modifications." buffer-name)))))
     (magit-refresh)))
 
 ;;;###autoload
