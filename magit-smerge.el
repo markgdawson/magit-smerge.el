@@ -62,14 +62,15 @@ File modifications will be saved if file is unmodified, otherwise the user will 
               (modified (buffer-modified-p (current-buffer)))) ;; must be checked before fn
           (magit-smerge--goto-line line)
           (funcall fn)
-          (when modified
-            (if (and magit-smerge-confirm-overwrite
-                     (yes-or-no-p (format "Buffer %s was already modified. Save it?"
-                                          buffer-name)))
-                (progn
-                  (save-buffer)
-                  (message "Buffer %s saved." buffer-name))
-              (message "Buffer %s not saved due to existing modifications." buffer-name))))))))
+          (if (and modified magit-smerge-confirm-overwrite)
+              (if (yes-or-no-p (format "Buffer %s was already modified. Save it?"
+                                       buffer-name))
+                  (progn
+                    (save-buffer)
+                    (message "Buffer %s saved." buffer-name))
+                (message "Warning: Buffer %s not saved due to existing modifications." buffer-name))
+            ;; save buffer if not modified or no confirmation needed
+            (save-buffer)))))))
 
 ;;;###autoload
 (defun magit-smerge-keep-upper ()
