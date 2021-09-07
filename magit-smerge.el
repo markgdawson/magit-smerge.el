@@ -35,15 +35,6 @@
 
 (require 'magit)
 
-(defgroup magit-smerge nil
-  "Add smerge commands to status buffer."
-  :group 'vc
-  :link '(url-link :tag "GitHub" "https://github.com/markgdawson/magit-smerge.el"))
-
-(defcustom magit-smerge-confirm-overwrite t
-  "Set to nil to overwrite changes in current buffers without prompting."
-  :type 'boolean)
-
 (defun magit-smerge--goto-line (line)
   "Goto LINE in current buffer."
   (widen)
@@ -51,26 +42,20 @@
   (forward-line (- line 1)))
 
 (defun magit-smerge--funcall-at-buffer-point (fn)
-  "Call function FN from buffer location at point.
+  "Call function FN from buffer location at point and save file.
 
-File modifications will be saved if file is unmodified, otherwise the user will be promopted."
+User will be prompted to save before running FN if the file has modifications."
   (save-window-excursion
     (let ((file (magit-file-at-point t t))
           (line (magit-diff-hunk-line (magit-diff-visit--hunk) nil)))
       (with-current-buffer (find-file-noselect file)
-        (let ((buffer-name (buffer-name (current-buffer)))
-              (modified (buffer-modified-p (current-buffer)))) ;; must be checked before fn
-          (magit-smerge--goto-line line)
-          (funcall fn)
-          (if (and modified magit-smerge-confirm-overwrite)
-              (if (yes-or-no-p (format "Buffer %s was already modified. Save it?"
-                                       buffer-name))
-                  (progn
-                    (save-buffer)
-                    (message "Buffer %s saved." buffer-name))
-                (message "Warning: Buffer %s not saved due to existing modifications." buffer-name))
-            ;; save buffer if not modified or no confirmation needed
-            (save-buffer)))))))
+        (if (buffer-modified-p (current-buffer))
+            (user-error (format "Buffer %s is already modified"
+                                (buffer-name (current-buffer)))))
+
+        (magit-smerge--goto-line line)
+        (funcall fn)
+        (save-buffer)))))
 
 ;;;###autoload
 (defun magit-smerge-keep-upper ()
