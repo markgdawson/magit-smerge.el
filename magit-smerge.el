@@ -40,9 +40,15 @@
   :group 'vc
   :link '(url-link :tag "GitHub" "https://github.com/markgdawson/magit-smerge.el"))
 
-(defcustom magit-smerge-no-confirm-overwrite nil
-  "Set to t to overwriting changes in current buffers without prompting."
+(defcustom magit-smerge-confirm-overwrite t
+  "Set to nil to overwrite changes in current buffers without prompting."
   :type 'boolean)
+
+(defun magit-smerge--goto-line (line)
+  "Goto LINE in current buffer."
+  (widen)
+  (goto-char (point-min))
+  (forward-line (- line 1)))
 
 (defun magit-smerge--funcall-at-buffer-point (fn)
   "Call function FN from buffer location at point.
@@ -52,21 +58,19 @@ File modifications will be saved if file is unmodified, otherwise the user will 
     (let ((file (magit-file-at-point t t))
           (line (magit-diff-hunk-line (magit-diff-visit--hunk) nil)))
       (with-current-buffer (find-file-noselect file)
-        (let ((modified (buffer-modified-p (current-buffer)))
-              (buffer-name (buffer-name (current-buffer))))
-          (widen)
-          (goto-char (point-min))
-          (forward-line (- line 1))
+        (let ((buffer-name (buffer-name (current-buffer)))
+              (modified (buffer-modified-p (current-buffer)))) ;; must be checked before fn
+          (magit-smerge--goto-line line)
           (funcall fn)
-          (if (or (not modified)
-                  magit-smerge-no-confirm-overwrite
-                  (yes-or-no-p (format "Buffer %s was already modified. Save it?"
-                                       buffer-name)))
-              (progn
-                (save-buffer)
-                (message "Buffer %s saved." buffer-name))
-            (message "Buffer %s not saved due to existing modifications." buffer-name)))))
-    (magit-refresh)))
+          (when modified
+            (if (and magit-smerge-confirm-overwrite
+                     (yes-or-no-p (format "Buffer %s was already modified. Save it?"
+                                          buffer-name)))
+                (progn
+                  (save-buffer)
+                  (message "Buffer %s saved." buffer-name))
+              (message "Buffer %s not saved due to existing modifications." buffer-name))
+            (magit-refresh)))))))
 
 ;;;###autoload
 (defun magit-smerge-keep-upper ()
