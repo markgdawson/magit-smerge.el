@@ -35,6 +35,15 @@
 
 (require 'magit)
 
+(defgroup magit-smerge nil
+  "Add smerge commands to status buffer."
+  :group 'vc
+  :link '(url-link :tag "GitHub" "https://github.com/markgdawson/magit-smerge.el"))
+
+(defcustom magit-smerge-no-confirm-overwrite nil
+  "Set to t to overwriting changes in current buffers without prompting."
+  :type 'boolean)
+
 (defun magit-smerge--funcall-at-buffer-point (fn)
   "Call function FN from buffer location at point.
 
@@ -50,6 +59,7 @@ File modifications will be saved if file is unmodified, otherwise the user will 
           (forward-line (- line 1))
           (funcall fn)
           (if (or (not modified)
+                  magit-smerge-no-confirm-overwrite
                   (yes-or-no-p (format "Buffer %s was already modified. Save it?"
                                        buffer-name)))
               (progn
