@@ -44,8 +44,10 @@ File modifications will be saved if file is unmodified, otherwise the user will 
           (line (magit-diff-hunk-line (magit-diff-visit--hunk) nil)))
       (with-current-buffer (find-file-noselect file)
         (let ((modified (buffer-modified-p (current-buffer)))
-              (buff-name (buffer-name (current-buffer))))
-          (goto-line line)
+              (buffer-name (buffer-name (current-buffer))))
+          (widen)
+          (goto-char (point-min))
+          (forward-line (- line 1))
           (funcall fn)
           (if (or (not modified)
                   (yes-or-no-p (format "Buffer %s was already modified. Save it?"
