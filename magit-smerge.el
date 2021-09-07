@@ -35,7 +35,6 @@
 
 (require 'magit)
 
-;;;###autoload
 (defun magit-smerge--funcall-at-buffer-point (fn)
   "Call function FN from buffer location at point.
 
