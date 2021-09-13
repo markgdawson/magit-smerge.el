@@ -1,3 +1,7 @@
+THIS PACKAGE IS OBSOLETE AS THIS IS CURRENTLY BEING IMPLEMENTED IN MAGIT.
+
+See https://github.com/magit/magit/issues/4458
+
 * About
 This package enables the smerge keybindings in the magit diff buffer.
 
