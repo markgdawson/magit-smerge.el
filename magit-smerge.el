@@ -50,8 +50,8 @@ User will be prompted to save before running FN if the file has modifications."
           (line (magit-diff-hunk-line (magit-diff-visit--hunk) nil)))
       (with-current-buffer (find-file-noselect file)
         (if (buffer-modified-p (current-buffer))
-            (user-error (format "Buffer %s is already modified"
-                                (buffer-name (current-buffer)))))
+            (user-error "Buffer %s is already modified"
+                        (buffer-name (current-buffer))))
 
         (magit-smerge--goto-line line)
         (funcall fn)
