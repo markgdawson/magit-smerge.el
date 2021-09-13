@@ -1,4 +1,4 @@
-;;; magit-smerge.el --- Allow calling smerge commands from magit diff buffer  -*- lexical-binding: t; -*-
+;;; magit-smerge.el ---  Call smerge commands from magit diff buffer  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021 Mark Dawson
 
